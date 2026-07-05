@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <algorithm>
+
+using namespace std;
+
+// global variables
+vector<vector<int>> gallery;
+vector<vector<vector<int>>> dp;
+
+// print debug utility
+void printDP(const vector<vector<int>>& dp) { for (const auto& row : dp) { for (int val : row) { cout << val << "\t";} cout << endl; } }
+
+int closeRooms(int k, int row, int col)
+{
+    // ^ base cases:
+    if (k == 0)             // there are enough rooms closed
+    {
+        return 0;
+    }
+    else if (row == -1)   // negative row
+    {
+        return INT_MAX / 2;
+    }
+
+    // ^ check if result already calculated
+    if (dp[k][row][col] != -1)
+    {
+        return dp[k][row][col];
+    }
+
+    int result = closeRooms(k, row - 1, 0);
+    switch (col)
+    {
+        case 0:
+            result = min(
+                {
+                    result,
+                    closeRooms(k - 1, row - 1, 1) + gallery[row][1],
+                    closeRooms(k - 1, row - 1, 2) + gallery[row][0]
+                });
+            break;
+        case 1:
+            result = min(
+                {
+                    result,
+                    closeRooms(k - 1, row - 1, 1) + gallery[row][1]
+                }); 
+            break;
+        case 2:
+            result = min(
+                {
+                    result,
+                    closeRooms(k - 1, row - 1, 2) + gallery[row][0]
+                }); 
+            break;
+    }
+
+    // // ^ determine if this room should be closed
+    // dp[k][row][col] = min(
+    //     {
+    //         closeRooms(k - 1, row - 1, col) + gallery[row][col],    // close this room
+    //         closeRooms(k, row - 1, 0),                              // keep room open and check if room below it should close
+    //         closeRooms(k, row - 1, 1)                               // keep room open and check if room diagonal below it should close
+    //     });
+
+    return dp[k][row][col] = result;
+}                            
+
+
+int main()
+{
+    // ^ parse inputs
+    int N;  // # of rows in gallery
+    int k;  // # of rooms to be closed off
+    cin >> N >> k;
+    gallery = vector<vector<int>>(N, vector<int>(2));
+    int total = 0;
+    for (int i = 0; i < N; i++)
+    {
+        cin >> gallery[i][0] >> gallery[i][1];
+        total += gallery[i][0] + gallery[i][1];
+    }
+    int zeros;
+    cin >> zeros >> zeros;
+
+    printDP(gallery);
+    cout << endl;
+
+    dp = vector<vector<vector<int>>>(k + 1, vector<vector<int>>(N, vector<int>(3, -1)));
+    cout << total - min(closeRooms(k, N - 1, 0), closeRooms(k, N - 1, 1)) + INT_MAX;
+
+    return 0;
+}
