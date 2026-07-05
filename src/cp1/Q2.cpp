@@ -1,3 +1,11 @@
+/*
+    COP4930 Competitive Programming CP1
+    Problem B. Opposites Attract
+
+    Author: Shane Ferrell
+    vjudge: shaneferrell
+*/
+
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
@@ -10,7 +18,7 @@ int main()
     int n;
     cin >> n;
 
-    unordered_map<int, int> scores;
+    unordered_map<int, long long> scores;
     for (int i = -10; i <= 10; i++)
     {
         scores[i] = 0;
@@ -24,7 +32,7 @@ int main()
         scores[t]++;
     }
 
-    int couples = 0;
+    long long couples = 0;
     for (int i = -10; i < 0; i++)
     {
         couples += scores[i] * scores[-i];

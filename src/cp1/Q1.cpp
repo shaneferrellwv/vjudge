@@ -1,3 +1,11 @@
+/*
+    COP4930 Competitive Programming CP1
+    Problem A. Registration System
+
+    Author: Shane Ferrell
+    vjudge: shaneferrell
+*/
+
 #include <iostream>
 #include <unordered_map>
 
